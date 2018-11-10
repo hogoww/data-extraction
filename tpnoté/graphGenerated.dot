@@ -192,15 +192,6 @@ parse -> setUnitName
 parse -> setEnvironment
 parse -> setSource
 parse -> createAST
-printMethodInvocationInfo -> accept
-printMethodInvocationInfo -> getMethods
-printMethodInvocationInfo -> accept
-printMethodInvocationInfo -> getMethods
-printMethodInvocationInfo -> toString
-printMethodInvocationInfo -> getName
-printMethodInvocationInfo -> toString
-printMethodInvocationInfo -> getName
-printMethodInvocationInfo -> add
 GenericVisit -> accept
 compare -> compare
 compare -> getMethods
