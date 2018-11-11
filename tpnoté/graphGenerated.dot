@@ -1,4 +1,6 @@
 digraph{
+addSon -> IAmYourDaddy
+addSon -> add
 equals -> equals
 equals -> equals
 createGraphString -> isEmpty
@@ -36,6 +38,10 @@ compare -> getLineNb
 visit -> isInterface
 visit -> add
 visit -> add
+visit -> println
+visit -> getName
+visit -> println
+visit -> getSuperclassType
 visit -> add
 visit -> toString
 visit -> getName

@@ -24,6 +24,7 @@ public class CodeStatistiqueVisitor extends ASTVisitor{
 		this.imports = new HashSet<>();
 	}
 	
+	
 	//Needed visitors
 	@Override//classes déclarations
 	public boolean visit(TypeDeclaration node) {
@@ -33,6 +34,8 @@ public class CodeStatistiqueVisitor extends ASTVisitor{
 		else {
 			classAST.add(node);
 		}
+
+	
 		return true;//We still have to parse the classes, in case we have inner classes/interfaces...
 	}
 	

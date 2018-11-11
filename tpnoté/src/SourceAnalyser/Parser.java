@@ -172,7 +172,7 @@ public class Parser {
 	}
 	
 	// navigate method invocations inside method
-		public static void printMethodInvocationInfo(CompilationUnit parse, CallGraphGenerator cgg) {
+		public static void printcationInfo(CompilationUnit parse, CallGraphGenerator cgg) {
 
 			MethodDeclarationVisitor visitor1 = new MethodDeclarationVisitor();
 			parse.accept(visitor1);
