@@ -33,6 +33,9 @@ public class ClassGraph {
 				superClass=new NodeClass(superName);
 				graph.put(superName,superClass);
 			}//Else it exists, whether it's shallow or not doesn't matter.
+			
+			NodeClass newSon=new NodeClass(superClass,td);
+			superClass.addSon(newSon);
 			graph.put(td.getName().toString(), new NodeClass(superClass,td));
 		}
 		else {
@@ -46,6 +49,8 @@ public class ClassGraph {
 				}//Else it exists, whether it's shallow or not doesn't matter.
 				
 				//And we replace it
+				NodeClass newSon=new NodeClass(superClass,td);
+				superClass.addSon(newSon);
 				graph.put(td.getName().toString(), new NodeClass(superClass,td));
 				
 			}

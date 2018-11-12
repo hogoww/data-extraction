@@ -5,27 +5,24 @@ import java.util.ArrayList;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 
-
-//Minimal tree to work with for this task.
-
 public class NodeClass{
 	NodeClass daddy;
 	ArrayList<NodeClass> sons;
 	String name;
-	TypeDeclaration data;
+	TypeDeclaration ClassDecl;
 	
 	public NodeClass getDaddy() {
 		return daddy;
 	}
 
 	public TypeDeclaration getData() {
-		return data;
+		return ClassDecl;
 	}
 	
 	public NodeClass(String myName){//For classes we might not know (yet or at all)
 		this.daddy=null;
 		this.sons=new ArrayList<>();
-		this.data=null;
+		this.ClassDecl=null;
 		this.name=myName;
 	}
 	
@@ -33,11 +30,11 @@ public class NodeClass{
 		this.daddy=daddy;
 		this.sons=new ArrayList<>();
 		this.name=data.getName().toString();
-		this.data=data;
+		this.ClassDecl=data;
 	}
 	
 	public boolean isRoot() {
-		return ((data!=null) && (daddy==null));
+		return ((ClassDecl!=null) && (daddy==null));
 	}
 	
 	public void addSon(NodeClass s) {
@@ -51,21 +48,29 @@ public class NodeClass{
 	
 	public void GotMyID(TypeDeclaration ID,NodeClass superType) {
 		this.daddy=superType;
-		this.data=ID;
+		this.ClassDecl=ID;
 	}
 	
 	public boolean isShallow() {
-		return data==null;
+		return ClassDecl==null;
 	}
 	
 	@Override
 	public String toString() {
 		if(this.isShallow()) {
-			return this.name+" is a shallow class.";
+			return this.name+" is a shallow class"+(sons.size()==0?".":" | His direct offspring are:"+this.printSons());
 		}
 		else{
-			return this.name+" is a parsed class, with "+this.daddy.getName()+" as a daddy.";
+			return this.name+" is a parsed class, with "+this.daddy.getName()+" as a daddy"+(sons.size()==0?".":" | His direct offspring are:"+printSons());
 		}
+	}
+	
+	public String printSons() {
+		String acc="";
+		for(NodeClass son : sons) {
+			acc+=" "+son.getName();
+		}
+		return acc;
 	}
 	
 	public String getName() {
