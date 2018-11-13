@@ -2,6 +2,7 @@ package logic;
 
 import java.util.ArrayList;
 
+import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 
@@ -76,5 +77,10 @@ public class NodeClass{
 	public String getName() {
 		return this.name;
 	}
+	
+	public MethodDeclaration lookUp() {
+		MethodDeclaration[] md=this.ClassDecl.getMethods();
 		
+		return md[1];
+	}
 }
