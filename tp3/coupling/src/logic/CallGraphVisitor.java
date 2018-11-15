@@ -1,18 +1,21 @@
 package logic;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.eclipse.jdt.core.dom.ASTVisitor;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 public class CallGraphVisitor extends ASTVisitor {
 	private HashMap<String,ClassGraph> packs=new HashMap<>();
 	private ClassGraph currentPackage;
+
+	private ArrayList<MethodDeclaration> currentMethods;
 	
 	public CallGraphVisitor() {
 		// TODO Auto-generated constructor stub
-		
 	}
 
 	public CallGraphVisitor(boolean visitDocTags) {
@@ -22,9 +25,20 @@ public class CallGraphVisitor extends ASTVisitor {
 	
 	@Override
 	public boolean visit(TypeDeclaration node) {
-		currentPackage.addTypeDeclaration(node);
+		currentMethods=new ArrayList<>();
 		return true;
 	}
+	
+	@Override
+	public void endVisit(TypeDeclaration node) {
+		currentPackage.addTypeDeclaration(node,currentMethods);
+	}
+	
+	public boolean visit(MethodDeclaration node) {
+		currentMethods.add(node);
+		return false;//No need to keep going. We'll do it in another
+	}
+
 	
 	@Override
 	public boolean visit(PackageDeclaration node) {
@@ -37,6 +51,7 @@ public class CallGraphVisitor extends ASTVisitor {
 		return true;
 	}
 	
+		
 	@Override
 	public String toString() {
 		String acc="";

@@ -1,7 +1,9 @@
 package logic;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 public class ClassGraph {
@@ -15,7 +17,8 @@ public class ClassGraph {
 		return graph.get(className);
 	}
 	
-	public void addTypeDeclaration(TypeDeclaration td) {
+	
+	public void addTypeDeclaration(TypeDeclaration td,ArrayList<MethodDeclaration> meths) {
 		
 		NodeClass res=searchNodeClass(td.getName().toString());
 		if(res==null) {//class doesn't exists yet.
@@ -34,9 +37,9 @@ public class ClassGraph {
 				graph.put(superName,superClass);
 			}//Else it exists, whether it's shallow or not doesn't matter.
 			
-			NodeClass newSon=new NodeClass(superClass,td);
+			NodeClass newSon=new NodeClass(superClass,td,meths);
 			superClass.addSon(newSon);
-			graph.put(td.getName().toString(), new NodeClass(superClass,td));
+			graph.put(td.getName().toString(), new NodeClass(superClass,td,meths));
 		}
 		else {
 			if(res.isShallow()) {
@@ -49,9 +52,9 @@ public class ClassGraph {
 				}//Else it exists, whether it's shallow or not doesn't matter.
 				
 				//And we replace it
-				NodeClass newSon=new NodeClass(superClass,td);
+				NodeClass newSon=new NodeClass(superClass,td,meths);
 				superClass.addSon(newSon);
-				graph.put(td.getName().toString(), new NodeClass(superClass,td));
+				graph.put(td.getName().toString(), new NodeClass(superClass,td,meths));
 				
 			}
 			else {

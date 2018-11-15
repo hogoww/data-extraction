@@ -11,15 +11,10 @@ public class NodeClass{
 	ArrayList<NodeClass> sons;
 	String name;
 	TypeDeclaration ClassDecl;
+	ArrayList<MethodDeclaration> myMethods;
 	
-	public NodeClass getDaddy() {
-		return daddy;
-	}
 
-	public TypeDeclaration getData() {
-		return ClassDecl;
-	}
-	
+
 	public NodeClass(String myName){//For classes we might not know (yet or at all)
 		this.daddy=null;
 		this.sons=new ArrayList<>();
@@ -27,12 +22,15 @@ public class NodeClass{
 		this.name=myName;
 	}
 	
-	public NodeClass(NodeClass daddy, TypeDeclaration data){
+	public NodeClass(NodeClass daddy, TypeDeclaration data,ArrayList<MethodDeclaration> meths){
 		this.daddy=daddy;
 		this.sons=new ArrayList<>();
 		this.name=data.getName().toString();
 		this.ClassDecl=data;
+		this.myMethods=meths;
 	}
+	
+
 	
 	public boolean isRoot() {
 		return ((ClassDecl!=null) && (daddy==null));
@@ -56,14 +54,37 @@ public class NodeClass{
 		return ClassDecl==null;
 	}
 	
+	
+	public String getName() {
+		return this.name;
+	}
+
+	public NodeClass getDaddy() {
+		return daddy;
+	}
+
+	public TypeDeclaration getData() {
+		return ClassDecl;
+	}
+	
+	public MethodDeclaration lookUp() {
+		MethodDeclaration[] md=this.ClassDecl.getMethods();
+		
+		return md[1];
+	}
+
 	@Override
 	public String toString() {
+		String res=this.name;
 		if(this.isShallow()) {
-			return this.name+" is a shallow class"+(sons.size()==0?".":" | His direct offspring are:"+this.printSons());
+			res+=" is a shallow class";
 		}
 		else{
-			return this.name+" is a parsed class, with "+this.daddy.getName()+" as a daddy"+(sons.size()==0?".":" | His direct offspring are:"+printSons());
+			res+=this.name+" is a parsed class, with "+this.daddy.getName()+" as a daddy"+(sons.size()==0?".":" | His direct offspring are:"+printSons());
 		}
+		res+=(sons.size()==0?".":" | His direct offspring are:"+this.printSons());
+		res+=(this.myMethods==null?"":"\n my methods are :"+this.printMethods());
+		return res;
 	}
 	
 	public String printSons() {
@@ -74,13 +95,11 @@ public class NodeClass{
 		return acc;
 	}
 	
-	public String getName() {
-		return this.name;
-	}
-	
-	public MethodDeclaration lookUp() {
-		MethodDeclaration[] md=this.ClassDecl.getMethods();
-		
-		return md[1];
+	public String printMethods() {
+		String acc="";
+		for(MethodDeclaration m: this.myMethods) {
+			acc+=" "+m.getName();
+		}
+		return acc;
 	}
 }
