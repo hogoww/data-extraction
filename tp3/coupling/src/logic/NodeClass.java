@@ -80,7 +80,7 @@ public class NodeClass{
 			res+=" is a shallow class";
 		}
 		else{
-			res+=this.name+" is a parsed class, with "+this.daddy.getName()+" as a daddy"+(sons.size()==0?".":" | His direct offspring are:"+printSons());
+			res+=" is a parsed class, with "+this.daddy.getName()+" as a daddy"+(sons.size()==0?".":" | His direct offspring are:"+printSons());
 		}
 		res+=(sons.size()==0?".":" | His direct offspring are:"+this.printSons());
 		res+=(this.myMethods==null?"":"\n my methods are :"+this.printMethods());

@@ -54,7 +54,7 @@ public class CallGraphVisitor extends ASTVisitor {
 		
 	@Override
 	public String toString() {
-		String acc="";
+		String acc="Package ";
 		for(String cg: packs.keySet()){
 			acc+=cg+" contains :\n";
 			acc+=packs.get(cg).toString();

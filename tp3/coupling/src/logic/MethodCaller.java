@@ -8,6 +8,7 @@ import org.eclipse.jdt.core.dom.MethodInvocation;
 public class MethodCaller {
 	private MethodDeclaration method;
 	private ArrayList<MethodInvocation> call;
+	private boolean superCall;
 	
 	public MethodCaller(MethodDeclaration m) {
 		this.method=m;
@@ -17,7 +18,8 @@ public class MethodCaller {
 	private void WhoDoICall() {
 		MethodInvocationVisitor visitor=new MethodInvocationVisitor();
 		method.accept(visitor);
-		call=visitor.getMethods();w
+		call=visitor.getMethods();
+		superCall=visitor.isCallSuper();
 	}
 	
 }
