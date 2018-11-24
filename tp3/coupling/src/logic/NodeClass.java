@@ -2,7 +2,6 @@ package logic;
 
 import java.util.ArrayList;
 
-import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 
@@ -11,7 +10,7 @@ public class NodeClass{
 	ArrayList<NodeClass> sons;
 	String name;
 	TypeDeclaration ClassDecl;
-	ArrayList<MethodDeclaration> myMethods;
+	ArrayList<MethodCaller> myMethods;
 	
 
 
@@ -22,15 +21,13 @@ public class NodeClass{
 		this.name=myName;
 	}
 	
-	public NodeClass(NodeClass daddy, TypeDeclaration data,ArrayList<MethodDeclaration> meths){
+	public NodeClass(NodeClass daddy, TypeDeclaration data,ArrayList<MethodCaller> meths){
 		this.daddy=daddy;
 		this.sons=new ArrayList<>();
 		this.name=data.getName().toString();
 		this.ClassDecl=data;
 		this.myMethods=meths;
 	}
-	
-
 	
 	public boolean isRoot() {
 		return ((ClassDecl!=null) && (daddy==null));
@@ -67,12 +64,27 @@ public class NodeClass{
 		return ClassDecl;
 	}
 	
-	public MethodDeclaration lookUp() {
-		MethodDeclaration[] md=this.ClassDecl.getMethods();
-		
-		return md[1];
-	}
 
+	public void resolveMethodsLinks(CallGraphVisitor packs) {
+		if( ! this.isShallow()) {
+			for(MethodCaller mc : this.myMethods) {
+				mc.resolveMethodsLinks(packs);
+			}
+		}
+	}
+	
+	public ArrayList<MethodCaller> lookUpMethod(String methodName){
+		
+		ArrayList<MethodCaller> res=new ArrayList<>();
+		for(MethodCaller mc: this.myMethods) {
+			if(mc.getMethod().getName().toString().equals(methodName)) {
+				res.add(mc);
+			}
+		}
+		
+		return res;
+	}
+	
 	@Override
 	public String toString() {
 		String res=this.name;
@@ -80,7 +92,7 @@ public class NodeClass{
 			res+=" is a shallow class";
 		}
 		else{
-			res+=" is a parsed class, with "+this.daddy.getName()+" as a daddy"+(sons.size()==0?".":" | His direct offspring are:"+printSons());
+			res+=" is a parsed class, with "+this.daddy.getName()+" as a daddy";
 		}
 		res+=(sons.size()==0?".":" | His direct offspring are:"+this.printSons());
 		res+=(this.myMethods==null?"":"\n my methods are :"+this.printMethods());
@@ -97,9 +109,10 @@ public class NodeClass{
 	
 	public String printMethods() {
 		String acc="";
-		for(MethodDeclaration m: this.myMethods) {
-			acc+=" "+m.getName();
+		for(MethodCaller m: this.myMethods) {
+			acc+=" "+m.getMethod().getName();
 		}
 		return acc;
 	}
+	
 }

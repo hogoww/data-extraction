@@ -11,18 +11,9 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 public class CallGraphVisitor extends ASTVisitor {
 	private HashMap<String,ClassGraph> packs=new HashMap<>();
 	private ClassGraph currentPackage;
-
-	private ArrayList<MethodDeclaration> currentMethods;
+	private ArrayList<MethodCaller> currentMethods;
 	
-	public CallGraphVisitor() {
-		// TODO Auto-generated constructor stub
-	}
 
-	public CallGraphVisitor(boolean visitDocTags) {
-		super(visitDocTags);
-		// TODO Auto-generated constructor stub
-	}
-	
 	@Override
 	public boolean visit(TypeDeclaration node) {
 		currentMethods=new ArrayList<>();
@@ -35,11 +26,10 @@ public class CallGraphVisitor extends ASTVisitor {
 	}
 	
 	public boolean visit(MethodDeclaration node) {
-		currentMethods.add(node);
+		currentMethods.add(new MethodCaller(node));
 		return false;//No need to keep going. We'll do it in another
 	}
 
-	
 	@Override
 	public boolean visit(PackageDeclaration node) {
 		this.currentPackage=packs.get(node.getName().toString());
@@ -51,7 +41,46 @@ public class CallGraphVisitor extends ASTVisitor {
 		return true;
 	}
 	
+	//If ClassName is null, we just propagate the null pointer exception, caller's responsibility
+	public ArrayList<NodeClass> lookUpClass(String ClassName,String Package) {
+		ArrayList<NodeClass> res=new ArrayList<>();
+		NodeClass found;
 		
+		if(Package==null) {
+			
+			//We don't know what packages the class we're looking for is in, so we have to iterate over them
+			for(ClassGraph cg: this.packs.values()) {
+				found=cg.getClassByName(ClassName);
+				if(found!=null) {
+					res.add(found);
+					break;
+				}
+			}
+		}
+		else {//We just return the class from the indicated package. If it doesn't exist, it's the caller's problem.
+			found=this.packs.get(Package).getClassByName(ClassName);
+			res.add(found);
+		}
+		
+		return res;
+	}
+	
+	public ArrayList<MethodCaller> lookUpMethodInClass(String ClassName,String MethodName,String Package) {
+		ArrayList<MethodCaller> res=new ArrayList<>();
+		
+		for(NodeClass nc : this.lookUpClass(ClassName,null)) {
+			res.addAll(nc.lookUpMethod(MethodName));
+		}
+		
+		return res;
+	}
+	
+	public void resolveMethodsLink() {
+		for(ClassGraph cg: this.packs.values()) {
+			cg.resolveMethodsLinks(this);
+		}
+	}
+	
 	@Override
 	public String toString() {
 		String acc="Package ";

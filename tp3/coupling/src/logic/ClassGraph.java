@@ -3,7 +3,6 @@ package logic;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 public class ClassGraph {
@@ -18,7 +17,7 @@ public class ClassGraph {
 	}
 	
 	
-	public void addTypeDeclaration(TypeDeclaration td,ArrayList<MethodDeclaration> meths) {
+	public void addTypeDeclaration(TypeDeclaration td,ArrayList<MethodCaller> meths) {
 		
 		NodeClass res=searchNodeClass(td.getName().toString());
 		if(res==null) {//class doesn't exists yet.
@@ -62,6 +61,17 @@ public class ClassGraph {
 			}
 		}
 	}
+	
+	public NodeClass getClassByName(String className) {
+		return this.graph.get(className);
+	}
+	
+	public void resolveMethodsLinks(CallGraphVisitor packs) {
+		for(NodeClass nc : this.graph.values()) {
+			nc.resolveMethodsLinks(packs);
+		}
+	}
+	
 	
 	public String toString() {
 		String acc="";

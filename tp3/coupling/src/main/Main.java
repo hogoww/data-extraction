@@ -1,19 +1,13 @@
 package main;
 
 
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
-/*import org.eclipse.core.internal.localstore.Bucket.Visitor;
-	import org.eclipse.core.internal.utils.FileUtil;
-	import org.eclipse.core.resources.IProject;
-	import org.eclipse.core.resources.IWorkspaceRoot;
-	import org.eclipse.core.resources.ResourcesPlugin;
-	import org.eclipse.core.runtime.CoreException;
-	import org.eclipse.jdt.core.ICompilationUnit;*/
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
@@ -22,11 +16,6 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 
 import logic.CallGraphVisitor;
 
-/*import org.eclipse.jdt.core.dom.MethodDeclaration;
-	import org.eclipse.jdt.core.dom.MethodInvocation;
-	import org.eclipse.jdt.core.dom.VariableDeclarationFragment;*/
-import org.eclipse.jdt.core.dom.*;
-
 
 public class Main {
 
@@ -34,7 +23,8 @@ public class Main {
 	public static String projectPath = "./";
 	public static String projectSourcePath = projectPath + "src";
 	public static String jrePath = "/usr/lib/jvm/java-8-openjdk-amd64/jre";
-
+	public static String ASTPath = "/home/ariale/data-extraction/ast libs";
+	
 	public static void main(String[] args) throws IOException {
 	// read java files
 		final File folder = new File(projectSourcePath);
@@ -46,13 +36,13 @@ public class Main {
 		
 		for (File fileEntry : javaFiles) {
 			String content = FileUtils.readFileToString(fileEntry);
-			// System.out.println(content);
 			
 			CompilationUnit parse = parse(content.toCharArray());
 			GenericVisit(parse, visitor);
 		}
+		visitor.resolveMethodsLink();
 		
-		System.out.println(visitor);
+		//System.out.println(visitor);
 
 	}
 
@@ -60,6 +50,7 @@ public class Main {
 	private static CompilationUnit parse(char[] classSource) {
 		ASTParser parser = ASTParser.newParser(AST.JLS4); // java +1.6
 		parser.setResolveBindings(true);
+
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
  
 		parser.setBindingsRecovery(true);
@@ -71,7 +62,7 @@ public class Main {
 		parser.setUnitName("");
  
 		String[] sources = { projectSourcePath }; 
-		String[] classpath = {jrePath};
+		String[] classpath = {jrePath, ASTPath};
  
 		parser.setEnvironment(classpath, sources, new String[] { "UTF-8"}, true);
 		parser.setSource(classSource);
