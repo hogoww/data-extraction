@@ -40,10 +40,12 @@ public class Main {
 			CompilationUnit parse = parse(content.toCharArray());
 			GenericVisit(parse, visitor);
 		}
-		visitor.resolveMethodsLink();
-		
 		//System.out.println(visitor);
-
+		
+		visitor.resolveMethodsLink();
+		System.out.println("pouet");
+		visitor.callGraphGeneration();
+		
 	}
 
 	// create AST

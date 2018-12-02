@@ -1,16 +1,19 @@
 package logic;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 
 public class MethodCaller {
 	private MethodDeclaration method;
-	private ArrayList<MethodCaller> call;
+	private HashSet<MethodCaller> calledMethod;
+	private NodeClass container;
 	
+
 	public MethodCaller(MethodDeclaration m) {
 		this.method=m;
-		this.call=new ArrayList<>();
+		this.calledMethod=new HashSet<>();
 	}
 	
 	/*private void whodoicall() {
@@ -28,11 +31,23 @@ public class MethodCaller {
 	public void resolveMethodsLinks(CallGraphVisitor packs) {
 		MethodInvocationVisitor visitor=new MethodInvocationVisitor(packs);
 		method.accept(visitor);
-		call=visitor.getMethods();
+		calledMethod=visitor.getMethods();
 		
 		System.out.println(this.method.getName().toString());
-		for(MethodCaller mc: this.call) {
+		for(MethodCaller mc: this.calledMethod) {
 			System.out.println("1 "+mc.getMethod().getName().toString());
 		}
+	}
+	
+	public NodeClass getContainer() {
+		return container;
+	}
+
+	public void setContainer(NodeClass container) {
+		this.container = container;
+	}
+	
+	public HashSet<MethodCaller> getCalledMethod() {
+		return calledMethod;
 	}
 }

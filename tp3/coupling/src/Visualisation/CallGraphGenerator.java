@@ -1,4 +1,4 @@
-package SourceAnalyser;
+package Visualisation;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -41,7 +41,7 @@ public class CallGraphGenerator {
 		}
 		String res = "digraph{\n";
 		for(Transition t: transitions) {
-			res += t.getCaller() + " -> " + t.getCallee() +";\n"; // -> pour unidirectionnel; -- pour bidirectionnel
+			res += t.getCaller() + " -> " + t.getCallee() +" [label=\""+t.getLabel()+"\"];\n"; // -> pour unidirectionnel; -- pour bidirectionnel
 		}
 		res+="\n }";
 		return res;

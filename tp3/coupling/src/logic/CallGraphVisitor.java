@@ -8,6 +8,9 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
+import Visualisation.CallGraphGenerator;
+import Visualisation.Transition;
+
 public class CallGraphVisitor extends ASTVisitor {
 	private HashMap<String,ClassGraph> packs=new HashMap<>();
 	private ClassGraph currentPackage;
@@ -27,7 +30,7 @@ public class CallGraphVisitor extends ASTVisitor {
 	
 	public boolean visit(MethodDeclaration node) {
 		currentMethods.add(new MethodCaller(node));
-		return false;//No need to keep going. We'll do it in another
+		return false;//No need to keep going. We'll do it in another visitor
 	}
 
 	@Override
@@ -79,6 +82,33 @@ public class CallGraphVisitor extends ASTVisitor {
 		for(ClassGraph cg: this.packs.values()) {
 			cg.resolveMethodsLinks(this);
 		}
+	}
+	
+	public void callGraphGeneration(){
+		CallGraphGenerator res=new CallGraphGenerator();
+		int coupling;
+		
+		//ArrayList<Transition> res=new ArrayList<>();
+		for(ClassGraph cg : this.packs.values()) {
+			for(NodeClass c1 : cg.getGraph().values()) {
+				for(ClassGraph cg2 : this.packs.values()) {
+					for(NodeClass c2 : cg.getGraph().values()) {
+						if(c1==c2) {
+							continue;
+						}
+						coupling=c1.getCouplingWith(c2);
+						if(coupling > 0) {
+							res.add(new Transition(c1.getName(),c2.getName(),coupling));
+						}
+						//System.out.println(c1.getCouplingWith(c2));
+					}
+				}
+			}
+		}
+		
+		res.generate();
+		
+		
 	}
 	
 	@Override

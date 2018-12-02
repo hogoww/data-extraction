@@ -19,6 +19,7 @@ public class NodeClass{
 		this.sons=new ArrayList<>();
 		this.ClassDecl=null;
 		this.name=myName;
+		this.myMethods=new ArrayList<>();
 	}
 	
 	public NodeClass(NodeClass daddy, TypeDeclaration data,ArrayList<MethodCaller> meths){
@@ -27,6 +28,13 @@ public class NodeClass{
 		this.name=data.getName().toString();
 		this.ClassDecl=data;
 		this.myMethods=meths;
+		setContainerForMyMethods();
+	}
+	
+	public void setContainerForMyMethods() {
+		for(MethodCaller mc: myMethods) {
+			mc.setContainer(this);
+		}
 	}
 	
 	public boolean isRoot() {
@@ -42,9 +50,14 @@ public class NodeClass{
 		daddy=d;
 	}
 	
-	public void GotMyID(TypeDeclaration ID,NodeClass superType) {
+	public void GotMyID(TypeDeclaration ID,NodeClass superType,ArrayList<MethodCaller> meths) {
 		this.daddy=superType;
 		this.ClassDecl=ID;
+		this.myMethods=meths;
+
+		for(MethodCaller mc: this.myMethods) {
+			mc.setContainer(this);
+		}
 	}
 	
 	public boolean isShallow() {
@@ -115,4 +128,26 @@ public class NodeClass{
 		return acc;
 	}
 	
+	public int getCouplingWith(NodeClass anotherClass) {
+		if(this.myMethods==null) {
+			return 0;
+		}
+		
+		int res=0;
+		String otherClassName=anotherClass.getName();
+		System.out.println(otherClassName);
+		
+		for(MethodCaller mc : this.myMethods) {
+			
+			System.out.println(" "+mc.getMethod().getName().toString());
+			for(MethodCaller called : mc.getCalledMethod()) {
+				System.out.println("  "+mc.getMethod().getName().toString());
+				if(otherClassName.equals(called.getContainer().getName().toString())) {
+					res++;
+				}		
+			}
+			
+		}
+		return res;
+	}
 }

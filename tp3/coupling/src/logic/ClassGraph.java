@@ -8,6 +8,10 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 public class ClassGraph {
 	HashMap<String,NodeClass> graph;
 	
+	public HashMap<String, NodeClass> getGraph() {
+		return graph;
+	}
+
 	public ClassGraph(){
 		graph=new HashMap<>();
 	}
@@ -50,11 +54,9 @@ public class ClassGraph {
 					graph.put(superName,superClass);
 				}//Else it exists, whether it's shallow or not doesn't matter.
 				
-				//And we replace it
-				NodeClass newSon=new NodeClass(superClass,td,meths);
-				superClass.addSon(newSon);
-				graph.put(td.getName().toString(), new NodeClass(superClass,td,meths));
-				
+				//we then update the shallow class to become complete
+				res.GotMyID(td,superClass,meths);
+				superClass.addSon(res);
 			}
 			else {
 				System.out.println("doublon");
@@ -72,6 +74,7 @@ public class ClassGraph {
 		}
 	}
 	
+		
 	
 	public String toString() {
 		String acc="";

@@ -1,6 +1,8 @@
 package logic;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.ConstructorInvocation;
 import org.eclipse.jdt.core.dom.IMethodBinding;
@@ -11,7 +13,7 @@ import org.eclipse.jdt.core.dom.SuperMethodInvocation;
 
 public class MethodInvocationVisitor extends ASTVisitor {
 	private boolean callSuper=false;
-	private ArrayList<MethodCaller> calledMethod = new ArrayList<>();
+	private HashSet<MethodCaller> calledMethod = new HashSet<>();
 	private CallGraphVisitor packages;
 	
 	public MethodInvocationVisitor(CallGraphVisitor packs) {
@@ -63,7 +65,7 @@ public class MethodInvocationVisitor extends ASTVisitor {
 		return true;
 	}
 	
-	public ArrayList<MethodCaller> getMethods() {
+	public HashSet<MethodCaller> getMethods() {
 		return this.calledMethod;
 	}
 

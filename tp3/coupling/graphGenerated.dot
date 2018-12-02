@@ -1,0 +1,24 @@
+digraph{
+Transition -> CallGraphGenerator [label="3"];
+Transition -> CallGraphGenerator [label="3"];
+Transition -> CallGraphGenerator [label="3"];
+NodeClass -> CallGraphVisitor [label="3"];
+ClassGraph -> CallGraphVisitor [label="5"];
+NodeClass -> CallGraphVisitor [label="3"];
+ClassGraph -> CallGraphVisitor [label="5"];
+NodeClass -> CallGraphVisitor [label="3"];
+ClassGraph -> CallGraphVisitor [label="5"];
+MethodCaller -> NodeClass [label="8"];
+MethodCaller -> NodeClass [label="8"];
+MethodCaller -> NodeClass [label="8"];
+MethodInvocationVisitor -> MethodCaller [label="1"];
+MethodInvocationVisitor -> MethodCaller [label="1"];
+MethodInvocationVisitor -> MethodCaller [label="1"];
+NodeClass -> ClassGraph [label="5"];
+NodeClass -> ClassGraph [label="5"];
+NodeClass -> ClassGraph [label="5"];
+CallGraphVisitor -> MethodInvocationVisitor [label="1"];
+CallGraphVisitor -> MethodInvocationVisitor [label="1"];
+CallGraphVisitor -> MethodInvocationVisitor [label="1"];
+
+ }
