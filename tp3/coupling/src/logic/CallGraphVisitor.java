@@ -1,5 +1,6 @@
 package logic;
 
+import Visualisation.*; 
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -87,18 +88,19 @@ public class CallGraphVisitor extends ASTVisitor {
 	public void callGraphGeneration(){
 		CallGraphGenerator res=new CallGraphGenerator();
 		int coupling;
-		
+				
 		//ArrayList<Transition> res=new ArrayList<>();
 		for(ClassGraph cg : this.packs.values()) {
 			for(NodeClass c1 : cg.getGraph().values()) {
 				for(ClassGraph cg2 : this.packs.values()) {
-					for(NodeClass c2 : cg.getGraph().values()) {
+					for(NodeClass c2 : cg2.getGraph().values()) {
 						if(c1==c2) {
 							continue;
 						}
+						
 						coupling=c1.getCouplingWith(c2);
 						if(coupling > 0) {
-							res.add(new Transition(c1.getName(),c2.getName(),coupling));
+							res.add(new Transition(c2.getName(),c1.getName(),coupling));
 						}
 						//System.out.println(c1.getCouplingWith(c2));
 					}

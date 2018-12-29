@@ -1,24 +1,13 @@
 digraph{
-Transition -> CallGraphGenerator [label="3"];
-Transition -> CallGraphGenerator [label="3"];
-Transition -> CallGraphGenerator [label="3"];
-NodeClass -> CallGraphVisitor [label="3"];
-ClassGraph -> CallGraphVisitor [label="5"];
-NodeClass -> CallGraphVisitor [label="3"];
-ClassGraph -> CallGraphVisitor [label="5"];
-NodeClass -> CallGraphVisitor [label="3"];
-ClassGraph -> CallGraphVisitor [label="5"];
-MethodCaller -> NodeClass [label="8"];
-MethodCaller -> NodeClass [label="8"];
-MethodCaller -> NodeClass [label="8"];
-MethodInvocationVisitor -> MethodCaller [label="1"];
-MethodInvocationVisitor -> MethodCaller [label="1"];
-MethodInvocationVisitor -> MethodCaller [label="1"];
-NodeClass -> ClassGraph [label="5"];
-NodeClass -> ClassGraph [label="5"];
-NodeClass -> ClassGraph [label="5"];
-CallGraphVisitor -> MethodInvocationVisitor [label="1"];
-CallGraphVisitor -> MethodInvocationVisitor [label="1"];
-CallGraphVisitor -> MethodInvocationVisitor [label="1"];
+Main -> CallGraphVisitor [label="2"];
+MethodCaller -> MethodInvocationVisitor [label="1"];
+Test -> NodeClass [label="3"];
+CallGraphVisitor -> ClassGraph [label="5"];
+CallGraphVisitor -> NodeClass [label="3"];
+ClassGraph -> NodeClass [label="5"];
+MethodInvocationVisitor -> CallGraphVisitor [label="1"];
+CallGraphVisitor -> CallGraphGenerator [label="2"];
+NodeClass -> MethodCaller [label="7"];
+CallGraphGenerator -> Transition [label="3"];
 
  }

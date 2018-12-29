@@ -97,6 +97,29 @@ public class NodeClass{
 		
 		return res;
 	}
+		
+	public int getCouplingWith(NodeClass anotherClass) {
+		if(this.myMethods==null) {
+			return 0;
+		}
+		
+		int res=0;
+		String otherClassName=anotherClass.getName();
+		//System.out.println(otherClassName);
+		
+		for(MethodCaller mc : this.myMethods) {
+			
+			//System.out.println(" "+mc.getMethod().getName().toString());
+			for(MethodCaller called : mc.getCalledMethod()) {
+				//System.out.println("  "+mc.getMethod().getName().toString());
+				if(otherClassName.equals(called.getContainer().getName().toString())) {
+					res++;
+				}		
+			}
+			
+		}
+		return res;
+	}
 	
 	@Override
 	public String toString() {
@@ -126,28 +149,5 @@ public class NodeClass{
 			acc+=" "+m.getMethod().getName();
 		}
 		return acc;
-	}
-	
-	public int getCouplingWith(NodeClass anotherClass) {
-		if(this.myMethods==null) {
-			return 0;
-		}
-		
-		int res=0;
-		String otherClassName=anotherClass.getName();
-		System.out.println(otherClassName);
-		
-		for(MethodCaller mc : this.myMethods) {
-			
-			System.out.println(" "+mc.getMethod().getName().toString());
-			for(MethodCaller called : mc.getCalledMethod()) {
-				System.out.println("  "+mc.getMethod().getName().toString());
-				if(otherClassName.equals(called.getContainer().getName().toString())) {
-					res++;
-				}		
-			}
-			
-		}
-		return res;
 	}
 }

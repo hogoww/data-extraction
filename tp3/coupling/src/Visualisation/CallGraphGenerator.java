@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * 
@@ -20,14 +21,14 @@ public class CallGraphGenerator {
 	/**
 	 * Appeler transitions mais est en fait le graphe. Le choix de set (arraylist en set) est pour éviter la duplication de transition entre 2 éléments.
 	 */
-	ArrayList<Transition> transitions;
+	HashSet<Transition> transitions;
 
 	/**
 	 * Seulement un constructeur par défaut sera créer, les tests seront une fonction initializeTest() 
 	 */
 	public CallGraphGenerator() {
 		super();
-		transitions = new ArrayList<Transition>();
+		transitions = new HashSet<Transition>();
 	}
 	
 	/**
@@ -105,7 +106,7 @@ public class CallGraphGenerator {
 		g.callDot();
 	}
 
-	public ArrayList<Transition> getTransitions() {
+	public HashSet<Transition> getTransitions() {
 		return transitions;
 	}
 

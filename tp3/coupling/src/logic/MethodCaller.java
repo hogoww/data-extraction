@@ -9,7 +9,6 @@ public class MethodCaller {
 	private MethodDeclaration method;
 	private HashSet<MethodCaller> calledMethod;
 	private NodeClass container;
-	
 
 	public MethodCaller(MethodDeclaration m) {
 		this.method=m;
@@ -30,13 +29,8 @@ public class MethodCaller {
 	
 	public void resolveMethodsLinks(CallGraphVisitor packs) {
 		MethodInvocationVisitor visitor=new MethodInvocationVisitor(packs);
-		method.accept(visitor);
-		calledMethod=visitor.getMethods();
-		
-		System.out.println(this.method.getName().toString());
-		for(MethodCaller mc: this.calledMethod) {
-			System.out.println("1 "+mc.getMethod().getName().toString());
-		}
+		this.method.accept(visitor);
+		this.calledMethod=visitor.getMethods();
 	}
 	
 	public NodeClass getContainer() {

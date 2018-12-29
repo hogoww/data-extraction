@@ -1,6 +1,7 @@
 package logic;
 
 import java.util.ArrayList;
+import java.lang.Object;
 import java.util.HashMap;
 
 import org.eclipse.jdt.core.dom.TypeDeclaration;

@@ -26,11 +26,13 @@ public class Transition {
 		return this.label;
 	}
 
-	public boolean equals(Transition t){
+/*	@Override
+	public boolean equals(Object o){
 		if(t.callee.equals(this.callee) && t.caller.equals(this.caller) && t.label==this.label){
+
 			return true;
 		}
 		return false;
-	}
+	}*/
 
 }
