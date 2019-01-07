@@ -217,7 +217,7 @@ public class CodeStatistiqueVisitor extends ASTVisitor{
 
 
 	//#12
-	public String  getMethodPercentileSortByLineNumberAsString(int taux){
+	public String getMethodPercentileSortByLineNumberAsString(int taux){
 		assert(taux>0 && taux<100);
 		return methodDeclarationToString((restrainMethods(taux)));
 	}
@@ -265,7 +265,7 @@ public class CodeStatistiqueVisitor extends ASTVisitor{
 	//#13
 	public String getMaxParameterMethodAsString() {//To show both the max & the associated Identifier. showing Identifier's class is a bit bothering, maybe later
 		MethodDeclaration res=getMaxParamMethod();
-		return  "Le plus grand nombre de paramettre pour une méthode est "+res.parameters().size()+" arguments,\n et la première méthode avec ce nombre d'arguments est \""+ res.getName()+"\"";
+		return  "Le plus grand nombre de paramètres pour une méthode est de "+res.parameters().size()+" arguments,\n et la première méthode avec ce nombre d'arguments est \""+ res.getName()+"\"";
 	}
 	
 	public MethodDeclaration getMaxParamMethod() {

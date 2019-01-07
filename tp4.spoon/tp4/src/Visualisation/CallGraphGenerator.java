@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import tp4.TreeNode;
+
 /**
  * 
  * @author rogliano
@@ -135,5 +137,33 @@ public class CallGraphGenerator {
 				}
 			}
 		}
+	}
+	
+	public String buildGraphFromTreeNode(TreeNode root) {
+		String caller="\"";
+		boolean first=true;
+		for(String ctemp : root.getClassNames() ) {
+			if(!first) {
+				caller+=" + ";
+			}
+			else {first=false;}
+			caller+=ctemp;
+		}
+		caller+="\"";
+		
+		
+		
+		if(root.getLeft()!=null) {
+			String callee=buildGraphFromTreeNode(root.getLeft());
+			this.add(new Transition(caller,callee,root.getValue()));
+		}
+		
+		
+		if(root.getRight()!=null) {
+			String callee=buildGraphFromTreeNode(root.getRight());
+			this.add(new Transition(caller,callee,root.getValue()));
+		}
+		
+		return caller;
 	}
 }

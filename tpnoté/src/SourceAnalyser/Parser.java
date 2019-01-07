@@ -18,6 +18,10 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+
+import gui.GUI;
+import gui.GUIRes;
+
 /*import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;*/
@@ -42,11 +46,36 @@ public class Parser {
 		ArrayList<File> javaFiles = listJavaFilesForFolder(folder);
 
 		CodeStatistiqueVisitor visitor=new CodeStatistiqueVisitor();
-		GUI g=new GUI();
+		GUI g=new GUI(projectSourcePath);
 		g.checkboxShow();
-	
 		
-		for (File fileEntry : javaFiles) {
+	
+
+		while(g.isNotDone()) {//Horrific but hey...	 GUI should stop the execution
+			try{
+				Thread.sleep(1000);
+			}
+			catch(InterruptedException e){
+				System.out.println("waiting for input");
+			}
+		}
+		
+		
+		if(!g.followUp()) {
+			System.out.println("Pas de calculs à faire!");
+			return;
+		}
+		
+		GUIRes windowRes=new GUIRes();
+		if(g.everythingUnchecked()) {
+			windowRes.showEmptyRes(g.getBoxDimension());
+			return;
+		}
+		//else
+		
+		System.out.println("Calcul en cours...");
+		
+		for (File fileEntry : javaFiles) { 
 			String content = FileUtils.readFileToString(fileEntry);
 			// System.out.println(content);
 
@@ -54,46 +83,45 @@ public class Parser {
 			GenericVisit(parse, visitor);
 		}
 	
-		/**
-		 * @move
-		 */
-				
 		//#1 isn't in the questions, so we have twice #12
 		
-		if(g.at(0))//check the correspondance with numbers. Should be in gui anyway.
+		if(true)//check the correspondance with numbers. Should be in gui anyway.
 			System.out.println("Classes:"+visitor.toString());
-		if(g.at(1))
-			System.out.println("=>"+visitor.nbClass()+" classes différentes.");
-		if(g.at(2))
-			System.out.println("Avec un total de "+visitor.nbMethodTotal()+" méthodes.");
-		if(g.at(3))	
-			System.out.println("Donnant une moyenne de "+visitor.AverageNbMethodByClass()+" méthodes par classes.");
-		if(g.at(4))
-			System.out.println("Ainsi qu'une moyenne de "+visitor.AverageFieldsByClass()+" attributs par classes.");
-		if(g.at(5))
-			System.out.println("Ce programmes importe : "+visitor.getNbOfUniqueImport()+" packages différents.");
+		if(g.at(0))
+			windowRes.addResult("#1 "+visitor.nbClass()+" classes différentes.");
+		if(g.at(1)) {
+			windowRes.addResult("#2 Le programme contient "+ visitor.programLineNumber()+" lignes.");}
+		if(g.at(2))	
+			windowRes.addResult("#3 Ce programme est composé de "+visitor.nbMethodTotal()+" méthodes.");
+		if(g.at(3))
+			windowRes.addResult("#4 Ce programmes importe "+visitor.getNbOfUniqueImport()+" packages différents.");
+		if(g.at(4))	
+			windowRes.addResult("#5 Il y a en moyenne "+visitor.AverageNbMethodByClass()+" méthodes par classes.");
+		if(g.at(5)) {
+			windowRes.addResult("#6 Le programme contient en moyenne "+ visitor.AverageLineNumberPerMethods()+" lignes par méthodes.");}
 		if(g.at(6))
-			System.out.println("Les 20% de classes aillant le plus d'attributs sont: "+visitor.getPercentileSortByFieldsAsString(20)+".");
+			windowRes.addResult("#7 Il y a une moyenne de "+visitor.AverageFieldsByClass()+" attributs par classes.");
 		if(g.at(7)) 
-			System.out.println("Les 20% de classes aillant le plus de méthodes sont: "+visitor.getPercentileSortByMethodsAsString(20)+".");
+			windowRes.addResult("#8 Les 20% de classes aillant le plus de méthodes sont : "+visitor.getPercentileSortByMethodsAsString(20)+".");
 		if(g.at(8))
-			System.out.println("Et celles appartenants à ces deux ensembles sonts: "+visitor.GetPercentileSortByFieldsAndMethodsAsString(20)+".");
+			windowRes.addResult("#9 Les 20% de classes aillant le plus d'attributs sont : "+visitor.getPercentileSortByFieldsAsString(20)+".");	
 		if(g.at(9))
-			System.out.println("Les classes aillant plus de "+5+" methodes sont: "+visitor.getClassesByNbMethodMinAsString(5)+".");
-		if(g.at(10)) {
-			System.out.println(visitor.getMaxParameterMethodAsString());
-		}
+			windowRes.addResult("#10 Les 20% de classe aillant le plus de méthode ET d'attributs sont : "+visitor.GetPercentileSortByFieldsAndMethodsAsString(20)+".");
+		if(g.at(10))
+			windowRes.addResult("#11 Les classes aillant plus de "+5+" methodes sont : "+visitor.getClassesByNbMethodMinAsString(5)+".");
 		if(g.at(11)) {
-			System.out.println("Le programme contient "+ visitor.programLineNumber()+" lignes.");
+			windowRes.addResult("#12 Les 10% de methodes aillant le plus de lignes de codes sont : "+visitor.getMethodPercentileSortByLineNumberAsString(10)+".");
 		}
 		if(g.at(12)) {
-			System.out.println("Le programme contient en moyenne "+ visitor.AverageLineNumberPerMethods()+" lignes par méthodes.");
+			windowRes.addResult(visitor.getMaxParameterMethodAsString());
 		}
-		if(g.at(12)) {
-			System.out.println("Les 10% de methodes aillant le plus de lignes de codes sont: "+visitor.getMethodPercentileSortByLineNumberAsString(10)+".");
+		if(g.at(13)) {
+			windowRes.addCallGraph();
 		}
 		
-		if(true) {//Add condition callGraph
+		windowRes.showRes(g.getBoxDimension());
+		
+		if(g.at(13)) {//done twice, for performances reasons
 			visitor.fullCallGraph();		
 		}
 		
@@ -136,59 +164,6 @@ public class Parser {
 		
 		return (CompilationUnit) parser.createAST(null); // create and parse
 	}
-
-	/*
-	// navigate method information
-	public static void printMethodInfo(CompilationUnit parse) {
-		MethodDeclarationVisitor visitor = new MethodDeclarationVisitor();
-		parse.accept(visitor);
-
-		for (MethodDeclaration method : visitor.getMethods()) {
-			System.out.println("Method name: " + method.getName()
-					+ " Return type: " + method.getReturnType2());
-		}
-
-	}
-
-	// navigate variables inside method
-	public static void printVariableInfo(CompilationUnit parse) {
-
-		MethodDeclarationVisitor visitor1 = new MethodDeclarationVisitor();
-		parse.accept(visitor1);
-		for (MethodDeclaration method : visitor1.getMethods()) {
-
-			VariableDeclarationFragmentVisitor visitor2 = new VariableDeclarationFragmentVisitor();
-			method.accept(visitor2);
-
-			for (VariableDeclarationFragment variableDeclarationFragment : visitor2
-					.getVariables()) {
-				System.out.println("variable name: "
-						+ variableDeclarationFragment.getName()
-						+ " variable Initializer: "
-						+ variableDeclarationFragment.getInitializer());
-			}
-
-		}
-	}
-	
-	// navigate method invocations inside method
-		public static void printcationInfo(CompilationUnit parse, CallGraphGenerator cgg) {
-
-			MethodDeclarationVisitor visitor1 = new MethodDeclarationVisitor();
-			parse.accept(visitor1);
-			for (MethodDeclaration method : visitor1.getMethods()) {
-
-				MethodInvocationVisitor visitor2 = new MethodInvocationVisitor();
-				method.accept(visitor2);
-
-				for (MethodInvocation methodInvocation : visitor2.getMethods()) {
-					Transition toAdd = new Transition (methodInvocation.getName().toString(),method.getName().toString());
-					cgg.add(toAdd);
-				}
-
-			}
-		}
-	*/
 	public static void GenericVisit(CompilationUnit parse,ASTVisitor visitor) {
 		parse.accept(visitor);
 	}

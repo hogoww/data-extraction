@@ -1,28 +1,9 @@
 digraph{
-"tp4.Main" -> "tp4.Main" [label="0.053",arrowhead="none"];
-"java.lang.Runtime" -> "Visualisation.CallGraphGenerator" [label="0.031",arrowhead="none"];
-"tp4.Main" -> "Visualisation.CallGraphGenerator" [label="0.031",arrowhead="none"];
-"tp4.Main" -> "java.io.PrintStream" [label="0.021",arrowhead="none"];
-"spoon.reflect.CtModel" -> "tp4.Main" [label="0.021",arrowhead="none"];
-"spoon.Launcher" -> "tp4.Main" [label="0.042",arrowhead="none"];
-"Visualisation.CallGraphGenerator" -> "Visualisation.CallGraphGenerator" [label="0.042",arrowhead="none"];
-"Visualisation.CallGraphGenerator" -> "java.io.PrintStream" [label="0.063",arrowhead="none"];
-"java.lang.Double" -> "tp4.Main" [label="0.063",arrowhead="none"];
-"spoon.reflect.code.CtAbstractInvocation" -> "tp4.Main" [label="0.021",arrowhead="none"];
-"java.lang.Math" -> "tp4.Main" [label="0.021",arrowhead="none"];
-"tp4.Main" -> "spoon.reflect.reference.CtExecutableReference" [label="0.031",arrowhead="none"];
-"java.lang.String" -> "Visualisation.CallGraphGenerator" [label="0.021",arrowhead="none"];
-"Visualisation.CallGraphGenerator" -> "java.lang.Throwable" [label="0.042",arrowhead="none"];
-"tp4.Main" -> "java.util.HashSet" [label="0.031",arrowhead="none"];
-"spoon.reflect.declaration.CtExecutable" -> "tp4.Main" [label="0.021",arrowhead="none"];
-"java.util.HashMap" -> "Visualisation.CallGraphGenerator" [label="0.042",arrowhead="none"];
-"java.lang.Object" -> "tp4.Main" [label="0.031",arrowhead="none"];
-"tp4.Main" -> "spoon.reflect.declaration.CtElement" [label="0.021",arrowhead="none"];
-"Visualisation.Transition" -> "Visualisation.CallGraphGenerator" [label="0.042",arrowhead="none"];
-"java.util.ArrayList" -> "Visualisation.CallGraphGenerator" [label="0.085",arrowhead="none"];
-"java.util.HashMap" -> "tp4.Main" [label="0.085",arrowhead="none"];
-"Visualisation.CallGraphGenerator" -> "java.io.PrintWriter" [label="0.031",arrowhead="none"];
-"Visualisation.CallGraphGenerator" -> "java.util.HashSet" [label="0.063",arrowhead="none"];
-"tp4.Main" -> "spoon.reflect.declaration.CtType" [label="0.031",arrowhead="none"];
+"Visualisation.Transition" -> "Visualisation.CallGraphGenerator + tp4.Main + Visualisation.Transition + tp4.TreeNode" [label="18.0",arrowhead="none"];
+"tp4.Main" -> "Visualisation.CallGraphGenerator + tp4.Main + tp4.TreeNode" [label="14.0",arrowhead="none"];
+"tp4.TreeNode" -> "Visualisation.CallGraphGenerator + tp4.TreeNode" [label="10.0",arrowhead="none"];
+"Visualisation.CallGraphGenerator + tp4.TreeNode" -> "Visualisation.CallGraphGenerator + tp4.Main + tp4.TreeNode" [label="14.0",arrowhead="none"];
+"Visualisation.CallGraphGenerator" -> "Visualisation.CallGraphGenerator + tp4.TreeNode" [label="10.0",arrowhead="none"];
+"Visualisation.CallGraphGenerator + tp4.Main + tp4.TreeNode" -> "Visualisation.CallGraphGenerator + tp4.Main + Visualisation.Transition + tp4.TreeNode" [label="18.0",arrowhead="none"];
 
  }
