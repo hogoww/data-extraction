@@ -22,18 +22,27 @@ public class Main {
 	static final int precision=1000;
 	public static void main(String[] args) {
 		Launcher launcher = new Launcher();//Creation of the model of the project we want to check out
-		launcher.addInputResource("/home/ariale/data-extraction/tp4.spoon/tp4"); 
+		launcher.addInputResource("/home/ariale/data-extraction/tp3"); 
 		launcher.buildModel();
 		CtModel model = launcher.getModel();
 		
 		
 		HashMap<HashSet<String>, Double> valueGraph=getCouplingGraph(model);
-		//convertToPercent(valueGraph);
-		//CallGraphGenerator graph=new CallGraphGenerator();//Call graph generation
 		
+		
+		TreeNode t=Clustering(valueGraph,model);
+		if(t!=null) {
+			t.display();
+		}
+		
+		for(TreeNode tr: t.clusterToModule()) {
+			System.out.println(tr);
+		}
+		//CallGraphGenerator graph=new CallGraphGenerator();//Call graph generation
+		//convertToPercent(valueGraph);
 		//graph.buildGraphFromHashMap(valueGraph);
 		//graph.generate();
-		Clustering(valueGraph,model).display();
+		
 	}
 	
 	
@@ -68,7 +77,11 @@ public class Main {
 				//System.out.println("  "+m.getSimpleName());
 				for(CtInvocation<?> i : m.getElements(new TypeFilter<>(CtInvocation.class))) {//get all method called (invocation)
 					CtExecutable<?> ex=i.getExecutable().getExecutableDeclaration();//get the declaration of the called method
-
+					
+					if(ex==null) {
+						System.out.println(i);
+						continue;
+					}
 					//We don't consider internal calls, since they are useless for coupling informations
 					if(t.getReference().toString().compareTo(ex.getReference().getDeclaringType().toString())!=0) {
 
@@ -101,6 +114,7 @@ public class Main {
 		
 		
 		if(clusters.size()==0) {//No classes parsed, no result.
+			System.out.println("Pas de classes trouvées");
 			return null;
 		}
 		
@@ -114,7 +128,8 @@ public class Main {
 		for(TreeNode t : clusters) {//Since there's only one... But it's a way to access it.
 			root=t;
 		}
-				
+		
+		System.out.println("clustering's done");
 		return root;
 	}
 	
@@ -123,11 +138,14 @@ public class Main {
 		TreeNode winner1=null;
 		TreeNode winner2=null;
 		
-		
+		//System.out.println("###########");
 		for(TreeNode t1 : clusters) {
+			//System.out.println("----------------");
 			for(TreeNode t2 : clusters) {
 				if(t1!=t2) {
 					double contestorValue=t1.clusterCoupling(t2, couplingGraph);
+					//System.out.println(t1+" "+t2+" = "+contestorValue);
+					
 					if(contestorValue > maxCoupling) {
 		
 						maxCoupling=contestorValue;
@@ -145,5 +163,7 @@ public class Main {
 		clusters.remove(winner1);
 		clusters.remove(winner2);
 	}
+	
+	
 
 }

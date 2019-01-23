@@ -1,5 +1,6 @@
 package tp4;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -13,9 +14,8 @@ public class TreeNode {
 	private TreeNode father=null;
 	
 	
-	
 	public TreeNode(){}
-	
+	 
 	public TreeNode(TreeNode daddy,Double couplageValue) {
 		father=daddy;
 		value=couplageValue;
@@ -37,7 +37,12 @@ public class TreeNode {
 		mergeResult.addAllClassNames(this);
 		mergeResult.addAllClassNames(t);
 		
-		mergeResult.setValue(this.clusterCoupling(t,couplingGraph));
+		if(this.isLeaf() && t.isLeaf()) {
+			mergeResult.setValue(this.couplingBetweenLeaves(t, couplingGraph));
+		}
+		else {
+			mergeResult.setValue(this.couplingBetweenTwoNotLeaf(t, couplingGraph));
+		}
 		mergeResult.setLeft(this);
 		mergeResult.setRight(t);
 		
@@ -131,19 +136,12 @@ public class TreeNode {
 			return new Double(couplingBetweenTwoNotLeaf(anotherTreeNode,couplingGraph));
 		}
 		
-		double addingValue;
-		if(this.isLeaf()) {
-			addingValue=anotherTreeNode.getValue().doubleValue();
-		}
-		else {
-			addingValue=this.getValue().doubleValue();
-		}
-			//		System.out.println(new Double(addingValue+couplingBetweenLeafAndNode(anotherTreeNode,couplingGraph)));
+		//		System.out.println(new Double(addingValue+couplingBetweenLeafAndNode(anotherTreeNode,couplingGraph)));
 //		System.out.println(couplingBetweenLeafAndNode(anotherTreeNode,couplingGraph));
 //		System.out.println("");
 		
 		
-		return new Double(addingValue+couplingBetweenLeafAndNode(anotherTreeNode,couplingGraph));
+		return new Double(couplingBetweenLeafAndNode(anotherTreeNode,couplingGraph));
 	}
 	
 	
@@ -205,4 +203,38 @@ public class TreeNode {
 				
 	}
 	
+	public String toString() {
+		String res="(";
+		for(String s : this.classNames) {
+			res+=","+s;
+		}
+		res+=" = "+this.value+")";
+		return res;
+	}
+
+	
+	public double similarity() {
+		return this.value;
+	}
+	
+	public ArrayList<TreeNode> clusterToModule() {
+		ArrayList<TreeNode> partition=new ArrayList<>();
+		this.clusterToModuleR(partition);
+		return partition;
+	}
+	
+	private void clusterToModuleR(ArrayList<TreeNode> partition){
+		if(this.isLeaf()) {
+			partition.add(this);
+			return;
+		}
+		
+		if(this.similarity()>((this.left.similarity()+this.right.similarity())/2)) {
+			partition.add(this);
+		}
+		else {
+			left.clusterToModuleR(partition);
+			right.clusterToModuleR(partition);
+		}
+	}
 }

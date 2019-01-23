@@ -66,7 +66,7 @@ public class MethodInvocationVisitor extends ASTVisitor {
 				);*/
 		}
 		else {
-			System.out.println("pouet"+node.toString()+" "+imb);
+			System.out.println("Pas réussi à faire le binding : "+node.toString()+" "+imb);
 		}
 	}
 	
