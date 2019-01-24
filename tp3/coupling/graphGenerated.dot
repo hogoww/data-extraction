@@ -1,13 +1,13 @@
 digraph{
-Main -> CallGraphVisitor [label="2"];
-MethodCaller -> MethodInvocationVisitor [label="1"];
+MethodInvocationVisitor -> CallGraphVisitor [label="1"];
+CallGraphGenerator -> Transition [label="3"];
 Test -> NodeClass [label="3"];
 CallGraphVisitor -> ClassGraph [label="5"];
-CallGraphVisitor -> NodeClass [label="3"];
 ClassGraph -> NodeClass [label="5"];
-MethodInvocationVisitor -> CallGraphVisitor [label="1"];
+CallGraphVisitor -> NodeClass [label="3"];
+Main -> CallGraphVisitor [label="2"];
 CallGraphVisitor -> CallGraphGenerator [label="2"];
 NodeClass -> MethodCaller [label="7"];
-CallGraphGenerator -> Transition [label="3"];
+MethodCaller -> MethodInvocationVisitor [label="1"];
 
  }

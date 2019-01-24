@@ -6,33 +6,33 @@ import java.util.HashSet;
 
 import Visualisation.CallGraphGenerator;
 
-public class TreeNode {
-	private TreeNode left=null;
-	private TreeNode right=null;
+public class Cluster {
+	private Cluster left=null;
+	private Cluster right=null;
 	private HashSet<String> classNames=new HashSet<String>();
 	private Double value=new Double(0);
-	private TreeNode father=null;
+	private Cluster father=null;
 	
 	
-	public TreeNode(){}
+	public Cluster(){}
 	 
-	public TreeNode(TreeNode daddy,Double couplageValue) {
+	public Cluster(Cluster daddy,Double couplageValue) {
 		father=daddy;
 		value=couplageValue;
 	}
 	
-	public TreeNode(String className) {
+	public Cluster(String className) {
 		classNames.add(className);
 	}
 	
-	public TreeNode(TreeNode daddy,HashSet<String> classNames_) {
+	public Cluster(Cluster daddy,HashSet<String> classNames_) {
 		father=daddy;
 		classNames=classNames_;
 	}
 	
 	
-	public TreeNode mergeWith(TreeNode t,HashMap<HashSet<String>,Double> couplingGraph) {
-		TreeNode mergeResult=new TreeNode();
+	public Cluster mergeWith(Cluster t,HashMap<HashSet<String>,Double> couplingGraph) {
+		Cluster mergeResult=new Cluster();
 		
 		mergeResult.addAllClassNames(this);
 		mergeResult.addAllClassNames(t);
@@ -67,7 +67,7 @@ public class TreeNode {
 	}
 	*/
 	
-	private double couplingBetweenLeaves(TreeNode anotherTreeNode,HashMap<HashSet<String>,Double> couplingGraph) {
+	private double couplingBetweenLeaves(Cluster anotherTreeNode,HashMap<HashSet<String>,Double> couplingGraph) {
 		HashSet<String> key=new HashSet<>();//Key creation is a bit tricky, since we have to get only an element from a set with one value. Have to go through an iterator for that
 		for(String c1 : this.getClassNames()) {
 			key.add(c1);
@@ -79,19 +79,19 @@ public class TreeNode {
 		return couplingGraph.getOrDefault(key,new Double(0)).doubleValue();
 	}
 
-	public double couplingBetweenTwoNotLeaf(TreeNode anotherTreeNode,HashMap<HashSet<String>,Double> couplingGraph) {
+	public double couplingBetweenTwoNotLeaf(Cluster anotherTreeNode,HashMap<HashSet<String>,Double> couplingGraph) {
 		double sum=0;
 		for(String className: this.getClassNames()){
 			
-			TreeNode temp=new TreeNode(className);
+			Cluster temp=new Cluster(className);
 			sum+=temp.couplingBetweenLeafAndNode(anotherTreeNode, couplingGraph);
 		}
 		return sum;
 	}
 	
-	private double couplingBetweenLeafAndNode(TreeNode anotherTreeNode,HashMap<HashSet<String>,Double> couplingGraph) {
+	private double couplingBetweenLeafAndNode(Cluster anotherTreeNode,HashMap<HashSet<String>,Double> couplingGraph) {
 		//Else, one of them is a leaf
-		TreeNode cluster;
+		Cluster cluster;
 		String single=null;
 		if(this.isLeaf()) {
 			cluster=anotherTreeNode;
@@ -127,7 +127,7 @@ public class TreeNode {
 		return couplage;
 	}
 	
-	public Double clusterCoupling(TreeNode anotherTreeNode,HashMap<HashSet<String>,Double> couplingGraph) {
+	public Double clusterCoupling(Cluster anotherTreeNode,HashMap<HashSet<String>,Double> couplingGraph) {
 		if(this.isLeaf() && anotherTreeNode.isLeaf()) {//If they both are leaves, we just have to get their coupling from the graph
 			return new Double(couplingBetweenLeaves(anotherTreeNode,couplingGraph));
 		}
@@ -145,7 +145,7 @@ public class TreeNode {
 	}
 	
 	
-	public boolean isRoot() {
+	public boolean isRoot(){
 		return father==null;
 	}
 	
@@ -153,19 +153,19 @@ public class TreeNode {
 		return (left==null && right==null);
 	}
 	
-	public TreeNode getLeft() {
+	public Cluster getLeft() {
 		return left;
 	}
 
-	public void setLeft(TreeNode left) {
+	public void setLeft(Cluster left) {
 		this.left = left;
 	}
 
-	public TreeNode getRight() {
+	public Cluster getRight() {
 		return right;
 	}
 
-	public void setRight(TreeNode right) {
+	public void setRight(Cluster right) {
 		this.right = right;
 	}
 
@@ -185,7 +185,7 @@ public class TreeNode {
 		this.classNames = classNames;
 	}
 	
-	public void addAllClassNames(TreeNode cluster) {
+	public void addAllClassNames(Cluster cluster) {
 		for(String c : cluster.getClassNames()) {
 			this.addClassName(c);
 		}
@@ -199,7 +199,7 @@ public class TreeNode {
 	public void display() {
 		CallGraphGenerator g=new CallGraphGenerator();
 		g.buildGraphFromTreeNode(this);
-		g.generate();
+		g.generate(2);
 				
 	}
 	
@@ -217,13 +217,13 @@ public class TreeNode {
 		return this.value;
 	}
 	
-	public ArrayList<TreeNode> clusterToModule() {
-		ArrayList<TreeNode> partition=new ArrayList<>();
+	public ArrayList<Cluster> clusterToModule() {
+		ArrayList<Cluster> partition=new ArrayList<>();
 		this.clusterToModuleR(partition);
 		return partition;
 	}
 	
-	private void clusterToModuleR(ArrayList<TreeNode> partition){
+	private void clusterToModuleR(ArrayList<Cluster> partition){
 		if(this.isLeaf()) {
 			partition.add(this);
 			return;

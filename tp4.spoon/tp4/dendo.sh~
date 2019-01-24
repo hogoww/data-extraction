@@ -1,0 +1,4 @@
+#!/bin/bash
+
+dot -Tpng graphGenerated.dot -o dendo.png
+xdg-open dendo.png

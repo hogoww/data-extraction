@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import tp4.TreeNode;
+import tp4.Cluster;
 
 /**
  * 
@@ -55,7 +55,7 @@ public class CallGraphGenerator {
 	 * Fonction se chargeant de générer le fichier .dot, ce dernier est réécrit à chaque utilisation (pas de append).
 	 * Ne fait rien si aucun graphe est donné
 	 */
-	public void writeGrapheInFile() {
+	public void writeGrapheInFile(int scriptNum) {
 		String graph = createGraphString();
 		if(graph.isEmpty()) {
 			System.err.println("No graph given.");
@@ -63,7 +63,12 @@ public class CallGraphGenerator {
 		}
 		PrintWriter writer = null;
 		try {
-			writer = new PrintWriter("graphGenerated.dot", "UTF-8");
+			if(scriptNum==1){
+				writer = new PrintWriter("graphGenerated.dot", "UTF-8");
+			}
+			else{
+				writer = new PrintWriter("dendoGenerated.dot","UTF-8");
+			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -79,22 +84,30 @@ public class CallGraphGenerator {
 	/**
 	 * Appel à dot pour générer un .png du graph afin de pouvoir le visualiser après coup (potentiel ajout d'appel à evince ou autre pour visualiser le .png)
 	 */
-	public void callDot() {
+	public void callDot(int scriptNum) {
 		Runtime run = Runtime.getRuntime();
 		// p uniquement si tu veux manier les flux de ton apps
 		try {
-			run .exec("./instru.sh");
+			switch(scriptNum){
+			case 1:
+				run .exec("./instru.sh");
+				break;
+			default:
+				run .exec("./dendo.sh");
+				
+			}
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	public void generate(){
+	public void generate(int scriptNum){
 		System.out.println("Filling file");
-		writeGrapheInFile();
+		writeGrapheInFile(scriptNum);
 		System.out.println("Call to dot");
-		callDot();
+		callDot(scriptNum);
 	}
 	
 	
@@ -139,7 +152,7 @@ public class CallGraphGenerator {
 		}
 	}
 	
-	public String buildGraphFromTreeNode(TreeNode root) {
+	public String buildGraphFromTreeNode(Cluster root) {
 		String caller="\"";
 		boolean first=true;
 		for(String ctemp : root.getClassNames() ) {

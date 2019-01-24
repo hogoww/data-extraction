@@ -1,0 +1,17 @@
+digraph{
+"p2.C" -> "p2.C + p2.D" [label="3.0",arrowhead="none"];
+"Visualisation.CallGraphGenerator + tp4.Main + tp4.Cluster" -> "Visualisation.CallGraphGenerator + tp4.Main + tp4.Cluster + Visualisation.Transition" [label="4.0",arrowhead="none"];
+"Visualisation.CallGraphGenerator + tp4.Main + tp4.Cluster + Visualisation.Transition" -> "Visualisation.CallGraphGenerator + tp4.Main + tp4.Cluster + p1.B + p1.A + Visualisation.Transition" [label="0.0",arrowhead="none"];
+"p2.C + p2.D" -> "Visualisation.CallGraphGenerator + p2.C + tp4.Main + tp4.Cluster + p1.B + p1.A + p2.D + Visualisation.Transition" [label="0.0",arrowhead="none"];
+"tp4.Main" -> "Visualisation.CallGraphGenerator + tp4.Main + tp4.Cluster" [label="8.0",arrowhead="none"];
+"p1.B" -> "p1.B + p1.A" [label="3.0",arrowhead="none"];
+"Visualisation.CallGraphGenerator" -> "Visualisation.CallGraphGenerator + tp4.Cluster" [label="10.0",arrowhead="none"];
+"Visualisation.CallGraphGenerator + tp4.Main + tp4.Cluster + p1.B + p1.A + Visualisation.Transition" -> "Visualisation.CallGraphGenerator + p2.C + tp4.Main + tp4.Cluster + p1.B + p1.A + p2.D + Visualisation.Transition" [label="0.0",arrowhead="none"];
+"p1.B + p1.A" -> "Visualisation.CallGraphGenerator + tp4.Main + tp4.Cluster + p1.B + p1.A + Visualisation.Transition" [label="0.0",arrowhead="none"];
+"tp4.Cluster" -> "Visualisation.CallGraphGenerator + tp4.Cluster" [label="10.0",arrowhead="none"];
+"p2.D" -> "p2.C + p2.D" [label="3.0",arrowhead="none"];
+"Visualisation.Transition" -> "Visualisation.CallGraphGenerator + tp4.Main + tp4.Cluster + Visualisation.Transition" [label="4.0",arrowhead="none"];
+"Visualisation.CallGraphGenerator + tp4.Cluster" -> "Visualisation.CallGraphGenerator + tp4.Main + tp4.Cluster" [label="8.0",arrowhead="none"];
+"p1.A" -> "p1.B + p1.A" [label="3.0",arrowhead="none"];
+
+ }

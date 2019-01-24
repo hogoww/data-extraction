@@ -22,26 +22,29 @@ public class Main {
 	static final int precision=1000;
 	public static void main(String[] args) {
 		Launcher launcher = new Launcher();//Creation of the model of the project we want to check out
-		launcher.addInputResource("/home/ariale/data-extraction/tp3"); 
+		launcher.addInputResource("/auto_home/pmissechanab/Desktop/old/data-extraction/tp4.spoon"); 
 		launcher.buildModel();
 		CtModel model = launcher.getModel();
 		
 		
 		HashMap<HashSet<String>, Double> valueGraph=getCouplingGraph(model);
 		
-		
-		TreeNode t=Clustering(valueGraph,model);
+		//question #2.1
+		Cluster t=Clustering(valueGraph,model);
 		if(t!=null) {
 			t.display();
 		}
 		
-		for(TreeNode tr: t.clusterToModule()) {
+		//question #2.2
+		for(Cluster tr: t.clusterToModule()) {
 			System.out.println(tr);
 		}
-		//CallGraphGenerator graph=new CallGraphGenerator();//Call graph generation
-		//convertToPercent(valueGraph);
-		//graph.buildGraphFromHashMap(valueGraph);
-		//graph.generate();
+		
+		//display question#3
+		CallGraphGenerator graph=new CallGraphGenerator();//Call graph generation
+		convertToPercent(valueGraph);
+		graph.buildGraphFromHashMap(valueGraph);
+		graph.generate(1);
 		
 	}
 	
@@ -102,13 +105,13 @@ public class Main {
 	}
 	
 	//Exercice 2
-	static public TreeNode Clustering(HashMap<HashSet<String>,Double> couplingGraph,CtModel model) {
-		TreeNode root=null;
-		HashSet<TreeNode> clusters=new HashSet<>();
+	static public Cluster Clustering(HashMap<HashSet<String>,Double> couplingGraph,CtModel model) {
+		Cluster root=null;
+		HashSet<Cluster> clusters=new HashSet<>();
 		
 		
 		for(CtType type : model.getAllTypes()) {//Creation of all basic clusters
-			TreeNode temp=new TreeNode(type.getReference().toString());//value doesn't matter. It'll never be considered on leafs.
+			Cluster temp=new Cluster(type.getReference().toString());//value doesn't matter. It'll never be considered on leafs.
 			clusters.add(temp);
 		}
 		
@@ -125,7 +128,7 @@ public class Main {
 			dendroCreation(clusters,couplingGraph);
 		}
 		
-		for(TreeNode t : clusters) {//Since there's only one... But it's a way to access it.
+		for(Cluster t : clusters) {//Since there's only one... But it's a way to access it.
 			root=t;
 		}
 		
@@ -133,15 +136,15 @@ public class Main {
 		return root;
 	}
 	
-	static private void dendroCreation(HashSet<TreeNode> clusters,HashMap<HashSet<String>,Double> couplingGraph) {
+	static private void dendroCreation(HashSet<Cluster> clusters,HashMap<HashSet<String>,Double> couplingGraph) {
 		double maxCoupling=-1;
-		TreeNode winner1=null;
-		TreeNode winner2=null;
+		Cluster winner1=null;
+		Cluster winner2=null;
 		
 		//System.out.println("###########");
-		for(TreeNode t1 : clusters) {
+		for(Cluster t1 : clusters) {
 			//System.out.println("----------------");
-			for(TreeNode t2 : clusters) {
+			for(Cluster t2 : clusters) {
 				if(t1!=t2) {
 					double contestorValue=t1.clusterCoupling(t2, couplingGraph);
 					//System.out.println(t1+" "+t2+" = "+contestorValue);
@@ -158,7 +161,7 @@ public class Main {
 		}
 		
 		
-		TreeNode res=winner1.mergeWith(winner2,couplingGraph);
+		Cluster res=winner1.mergeWith(winner2,couplingGraph);
 		clusters.add(res);
 		clusters.remove(winner1);
 		clusters.remove(winner2);

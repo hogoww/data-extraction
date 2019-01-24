@@ -1,0 +1,4 @@
+#!/bin/bash
+
+circo -Tpng graphGenerated.dot -o callgraph.png
+xdg-open callgraph.png

@@ -24,7 +24,7 @@ public class Main {
 	public static String projectPath = "./";
 	public static String projectSourcePath = projectPath + "src";
 	public static String jrePath = "/usr/lib/jvm/java-8-openjdk-amd64/jre";
-	public static String ASTPath = "/home/ariale/data-extraction/ast libs";
+	public static String ASTPath = "/auto_home/pmissechanab/Desktop/old/data-extraction/astlib";
 	
 	public static void main(String[] args) throws IOException {
 	// read java files
